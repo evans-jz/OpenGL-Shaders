@@ -28,6 +28,6 @@ void main()
     gl_Position = MVP * vertex_pos;
     // you need to change the following lines!
     uv_coordinates_raster = uv_coordinates;
-    normals_raster = vertex_normal;
-    light0_vector_raster = normalize(vec3(light0_pos_eye - vertex_pos_eye));
+    normals_raster = normalize(mat3(TINVMV) * vertex_normal);
+    light0_vector_raster = normalize(vec3(light0_pos_eye - vertex_pos));
 }

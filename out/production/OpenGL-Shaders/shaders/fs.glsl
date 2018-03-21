@@ -26,7 +26,11 @@ void main() {
     
     const vec3 diffuse_light_color = vec3(0.25, 0.25, 0.5);
     const vec3 ambient_light_color = vec3(0.75, 0.75, 0.75);
-    
+
     // you need to change the following lines (and use the above variables and constants)
-    glFragColor = vec4(0.5, 0.5, 0.5, 1.0);
+    float diffuse = clamp(dot(normalize(normals_raster),normalize(light0_vector_raster)), 0, 1);
+    glFragColor =  texture(texture0, uv_coordinates_raster )*vec4((ambient_light_color + diffuse_light_color * max(diffuse,0)),0);
+
+    glFragColor.r += 0.1 * cos(.01 * timer);
+    glFragColor.g += 0.1 * sin(.01 * timer);
 }

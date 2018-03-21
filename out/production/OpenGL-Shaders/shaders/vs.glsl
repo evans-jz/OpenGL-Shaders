@@ -21,14 +21,13 @@ uniform vec4 light0_pos_eye;
 
 out vec2 uv_coordinates_raster;
 out vec3 normals_raster;
-out vec3 light0_vector_raster; 
+out vec3 light0_vector_raster;
 
 void main() 
 {   
     gl_Position = MVP * vertex_pos;
-    
     // you need to change the following lines!
-    uv_coordinates_raster = vec2(0.0, 0.0);
-    normals_raster = vec3(0.0, 0.0, 0.0);
-    light0_vector_raster = vec3(0.0, 0.0, 0.0);
+    uv_coordinates_raster = uv_coordinates;
+    normals_raster = normalize(mat3(TINVMV) * vertex_normal);
+    light0_vector_raster = normalize(vec3(light0_pos_eye - vertex_pos));
 }
