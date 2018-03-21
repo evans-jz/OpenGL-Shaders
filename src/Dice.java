@@ -589,12 +589,32 @@ public class Dice extends JFrame implements GLEventListener, KeyListener {
                     // if we used face indices to vertices (as in OBJs)
                     gl3.glDrawArrays(GL3.GL_TRIANGLES, 0, 12 * 3); // 12*3 indices starting at 0 -> 12 triangles
                 }
-            }            
-
+            }
             /* === YOUR WORK HERE === */
             // Can you draw the second die as required by the assignment? 
             // Hint: you need to change the model transformation matrix
             // and the other matrices that depend on it
+
+            FloatUtil.makeRotationAxis(tmp_matrix, 0, ((float) angle_change / 180.0f) * FloatUtil.PI, axis_of_rotation2[0], axis_of_rotation2[1], axis_of_rotation2[2], tmp_vec);
+            FloatUtil.multMatrix(tmp_matrix, rotation_matrix2, rotation_matrix2);
+            FloatUtil.makeTranslation(translation_matrix2, true, 2.0f, 0.0f, 0.0f);
+            FloatUtil.multMatrix(translation_matrix2, rotation_matrix2, model_matrix2);
+            FloatUtil.multMatrix(view_matrix, model_matrix2, model_view_matrix);
+            FloatUtil.multMatrix(projection_matrix, model_view_matrix, model_view_projection_matrix);
+            FloatUtil.invertMatrix(model_view_matrix, inverse_model_view_matrix); // first inverse
+            FloatUtil.transposeMatrix(inverse_model_view_matrix, transpose_inverse_model_view_matrix); // then transpose
+
+            gl3.glUniformMatrix4fv(model_view_projection_matrix_ref_shader, 1, false, model_view_projection_matrix, 0);
+            gl3.glUniformMatrix4fv(model_view_matrix_ref_shader, 1, false, model_view_matrix, 0);
+            gl3.glUniformMatrix4fv(transpose_inverse_model_view_matrix_ref_shader, 1, false, transpose_inverse_model_view_matrix, 0);
+
+            gl3.glBindVertexArray(vertex_array_object_refs[0]);
+            {
+                gl3.glBindTexture(GL3.GL_TEXTURE_2D, texture_object_refs[0]);
+                {
+                    gl3.glDrawArrays(GL3.GL_TRIANGLES, 0, 12 * 3); // 12*3 indices starting at 0 -> 12 triangles
+                }
+            }
         }
 
         checkError(gl3, "error during the display function"); // check for any error
